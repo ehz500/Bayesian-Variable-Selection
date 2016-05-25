@@ -1,0 +1,32 @@
+cat("model{
+   for(i in 1:n){
+    y[i]~dbin(pi[i],1)
+    #Funcion Liga
+    logit(pi[i])<-alpha+x[i,]%*%beta
+    
+    }
+    #A priori's
+    
+    
+    alpha ~ dnorm(0,1.0E-6)
+    #tau ~ dgamma(1.0E-4,1.0E-4) # Esta no la ponemos porque es la precisión cuando y[i] es normal
+    tauBeta <-pow(sdBeta,-2);   sdBeta ~ dunif(0,20) #tau_in=tauBeta #sd_bet=sdBeta
+    TauM[1] <- tauBeta*1000;      TauM[2] <- tauBeta #TauM[1]=tau[1]; TauM[2]=tau[2]
+    PInd[2] <- 0.5;      PInd[1] <- 1-PInd[2] #PInd[2]=p_ind[1]; PInd[1]=p_ind[2]
+
+    for(i in 1:var_expl){
+    
+    IndA[i] ~ dcat(PInd[])
+    Ind[i] <- IndA[i]-1     #Ind=gamma
+    beta[i] ~ dnorm(0, TauM[IndA[i]])
+    
+    }
+    #Estimaciones de Ys conocidas con
+    #La posterior que genera Jags
+    #for(i in 1:n){
+    
+    yest[i]~dbin(pi[i],1)
+    
+    #}
+    }"
+    , file="ssvs_04.txt")
