@@ -1,0 +1,28 @@
+model{
+   for(i in 1:n){
+    y[i]~dbin(pi[i],1)
+    #Funcion Liga
+    logit(pi[i])<-alpha+x[i,]%*%beta
+    
+    }
+    #A priori's
+    
+    
+    alpha ~ dnorm(0,1.0E-6)
+    tau ~ dgamma(1.0E-4,1.0E-4)
+    
+    for(i in 1:var_expl){
+    
+    lnTau[i] ~ dunif(-50, 50);   TauM[i] <- exp(lnTau[i])
+    beta[i]~dnorm(0,TauM[i])
+    Ind [i] <- step(abs(beta[i]) - 0.05)
+    
+    }
+    #Estimaciones de Ys conocidas con
+    #La posterior que genera Jags
+    for(i in 1:n){
+    
+    yest[i]~dbin(pi[i],1)
+    
+    }
+    }
