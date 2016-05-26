@@ -23,10 +23,10 @@ cat("model{
     }
     #Estimaciones de Ys conocidas con
     #La posterior que genera Jags
-    #for(i in 1:n){
+    for(i in 1:n){
     
     yest[i]~dbin(pi[i],1)
     
-    #}
+    }
     }"
     , file="ssvs_04.txt")
